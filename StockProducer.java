@@ -41,7 +41,7 @@ public class StockProducer {
         
         
         // configure the producer
-        //configureProducer(brokerSocket);
+        configureProducer(brokerSocket);
         
         // TODO create a buffered file reader for the input file
  
@@ -49,8 +49,10 @@ public class StockProducer {
         String temp1 = null;
         String temp2 = br.readLine();
         String temp3 = br.readLine();
+
+       
         
-        // TODO loop through all lines in input file
+     // TODO loop through all lines in input file
         while(br.readLine() != null)
         {
         	temp1 = temp2;
@@ -81,6 +83,7 @@ public class StockProducer {
         		obj.put("low", timestamp);
         		obj.put("close", timestamp);
         		obj.put("volume", timestamp);
+        		System.out.println(timestamp + ": " + volume);//debugging 
         		
                ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, obj);
                producer.send(rec);
