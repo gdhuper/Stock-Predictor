@@ -53,7 +53,7 @@ public class StockProducer {
        
         
      // TODO loop through all lines in input file
-        while(br.readLine() != null)
+        while(true)
         {
         	temp1 = temp2;
         	temp2 = temp3;
@@ -83,10 +83,17 @@ public class StockProducer {
         		obj.put("low", timestamp);
         		obj.put("close", timestamp);
         		obj.put("volume", timestamp);
-        		System.out.println(timestamp + ": " + volume);//debugging 
+        		//System.out.println(timestamp + ": " + volume);//debugging 
         		
                ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, obj);
+               System.out.println(topic + " : " + obj.toString());
+               try{
                producer.send(rec);
+               }
+               catch (Exception e)
+               {
+            	   System.out.println(e.getMessage());
+               }
                
                // TODO sleep the thread
                Thread.sleep(sleepTime);

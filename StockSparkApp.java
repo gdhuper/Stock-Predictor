@@ -72,7 +72,7 @@ public final class StockSparkApp {
         
         // define topic to subscribe to
         final Pattern topicPattern = Pattern.compile(inTopic, Pattern.CASE_INSENSITIVE);
-    
+        
         // set Kafka client parameters
         Map<String, Object> kafkaParams = new HashMap<String, Object>();
         kafkaParams.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -98,7 +98,7 @@ public final class StockSparkApp {
             @Override
             public Tuple2<String, JsonNode> call(ConsumerRecord<String, JsonNode> record) throws Exception {
                 // TODO replace 'null' with key-value pair as tuple2
-                return null;
+                return new Tuple2(record.key(), record.value());
             }
         }); 
         
@@ -142,15 +142,28 @@ public final class StockSparkApp {
                         ObjectNode value = JsonNodeFactory.instance.objectNode();
                         
                         // TODO put key-value pairs in ObjectNode
+                        value.put("lastTimestamp", 1);
+                        value.put("meanHigh", 1);
+                        value.put("meanLow", 1);
+                        value.put("meanOpen", 1);
+                        value.put("meanClose", 1);
+                        value.put("meanVolume", 1);
+                        value.put("lastClose", 1);
+
+
+                        
 
                         // TODO create a properly-parameterized ProducerRecord
+                        ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(outTopic, value);
                         
                         // TODO instantiate the KafkaProducer
+                       KafkaProducer<String, JsonNode> producer = new KafkaProducer<String, JsonNode>(producerProps);
+
                         
                         // TODO send the producer record
-                        
+                       	producer.send(rec);                        
                         // TODO close the producer
- 
+                        producer.close();
                     }                     
                 });
             }           
