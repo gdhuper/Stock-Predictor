@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -98,9 +99,12 @@ public final class StockSparkApp {
             @Override
             public Tuple2<String, JsonNode> call(ConsumerRecord<String, JsonNode> record) throws Exception {
                 // TODO replace 'null' with key-value pair as tuple2
+            	System.out.println(record.key() + " : " + record.value());
                 return new Tuple2(record.key(), record.value());
+                
             }
         }); 
+        keyValuePairs.print(); //debugging
         
 
         
@@ -119,7 +123,14 @@ public final class StockSparkApp {
                         Tuple2<String, JsonNode> tuple;
                         while(recordIterator.hasNext()) {
                             // TODO get next record
-                            
+                        	tuple = recordIterator.next();
+                        	String key = tuple._1;
+                        	JsonNode val = tuple._2;
+                        	
+                        	System.out.println(key);
+                        	
+                        	
+     
                             // TODO pull out timestamp, stockSymbol from record
                             
                             // TODO pull out metrics from record
