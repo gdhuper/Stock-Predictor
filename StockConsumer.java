@@ -76,12 +76,12 @@ public class StockConsumer {
                    // set previos to next
                     
              } 
-            System.out.println(meanMeanClose);
-            System.out.println(meanMeanOpen);
+            System.out.println(meanMeanClose/consumerRecords.count());
+            System.out.println(meanMeanOpen/consumerRecords.count());
             
-            System.out.println(meanMeanLow);
-            System.out.println(meanMeanHigh);
-            System.out.println(meanMeanVolume);
+            System.out.println(meanMeanLow/consumerRecords.count());
+            System.out.println(meanMeanHigh/consumerRecords.count());
+            System.out.println(meanMeanVolume/consumerRecords.count());
             
         }
 
