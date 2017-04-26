@@ -77,10 +77,11 @@ public class StockProducer {
         		obj.put("low", arr[3]);
         		obj.put("close", arr[4]);
         		obj.put("volume", arr[5]);
+        		obj.put("stockSymbol", stockSymbol);
         		//System.out.println(timestamp + ": " + volume);//debugging 
         		
                ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, obj);
-               System.out.println(topic + " : " + obj.toString());
+               System.out.println(stockSymbol + " : " + obj.toString()); //debugging
                try{
                producer.send(rec);
                }
@@ -91,8 +92,6 @@ public class StockProducer {
                // TODO sleep the thread
                Thread.sleep(sleepTime);
         		
-
-        		
         	}
         }
         
@@ -102,10 +101,7 @@ public class StockProducer {
         // TODO close producer
         producer.close();
         
-        
-        
-
-        
+              
         
     }
 

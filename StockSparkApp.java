@@ -122,11 +122,11 @@ public final class StockSparkApp {
                         long sumVolume=0;
                         String stockSymbol = null, lastTimestamp = null;
                         Tuple2<String, JsonNode> tuple;
-                        int count = 0;
+                        
                         while(recordIterator.hasNext()) {
                             // TODO get next record
                         	tuple = recordIterator.next();
-                        	stockSymbol = tuple._1();
+                        	stockSymbol = tuple._2().get("stockSymbol").asText();
                         	lastTimestamp = tuple._2().get("timestamp").asText();
                         	sumHigh += tuple._2().get("high").asDouble();
                         	sumLow += tuple._2().get("low").asDouble();
@@ -134,9 +134,7 @@ public final class StockSparkApp {
                         	sumClose += tuple._2().get("close").asDouble();
                         	lastClose = tuple._2().get("close").asDouble();
                         	sumVolume += tuple._2().get("volume").asDouble();
-                        	count++;
-     
-
+                        	
                         }
                         
                         // TODO calculate meanHigh, meanLow, ...
@@ -162,12 +160,9 @@ public final class StockSparkApp {
                         value.put("lastClose", lastClose);
 
                         // TODO create a properly-parameterized ProducerRecord
-                        ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(outTopic, value);
-                        
+                        ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(outTopic, value);                      
                         // TODO instantiate the KafkaProducer
-                       KafkaProducer<String, JsonNode> producer = new KafkaProducer<String, JsonNode>(producerProps);
-
-                        
+                       KafkaProducer<String, JsonNode> producer = new KafkaProducer<String, JsonNode>(producerProps);                     
                         // TODO send the producer record
                        	producer.send(rec);                        
                         // TODO close the producer
