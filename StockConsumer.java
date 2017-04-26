@@ -5,6 +5,8 @@ import org.apache.kafka.clients.consumer.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -16,7 +18,7 @@ public class StockConsumer {
 
     public static void main(String[] args) throws IOException {
         // check command-line arguments
-        if(args.length != 4) {
+        if(args.length != 5) {
             System.err.println("usage: StockConsumer <broker-socket> <input-topic> <stock-symbol> <group-id> <threshold-%>");
             System.err.println("e.g.: StockConsumer localhost:9092 stats orcl mycg 0.5");
             System.exit(1);
@@ -36,23 +38,53 @@ public class StockConsumer {
         configureConsumer(brokerSocket, groupId);
         
         // TODO subscribe to the topic
-
+        List<String> topics = new ArrayList<>();
+        topics.add(inputTopic);
+        consumer.subscribe(topics);
+        
         // TODO loop infinitely -- pulling messages out every pollTimeOut ms
-        
-        // TODO iterate through message batch
-        
-        // TODO create a ConsumerRecord from message
-        
-        // TODO pull out statistics from message
-        
-        // TODO calculate batch statistics meanHigh, meanLow, meanOpen, meanClose, meanVolume
-        
-        // TODO calculate currentAggregatedStatistic and compare to previousAggregatedStatistic
-        
-        // TODO determine if delta percentage is greater than threshold 
-        
-        // TODO print output to screen
-        
+       
+        double meanMeanHigh = 0, meanMeanLow = 0, meanMeanOpen = 0, meanMeanClose = 0, meanMeanVolume= 0;
+         
+        while(true) {
+            // Request unread messages from the topic.
+            ConsumerRecords<String, JsonNode> consumerRecords = consumer.poll(pollTimeOut);
+            
+            Iterator<ConsumerRecord<String, JsonNode>> iterator = consumerRecords.iterator();
+            while (iterator.hasNext()) {
+            	// TODO create a ConsumerRecord from message
+                    ConsumerRecord<String, JsonNode> record = iterator.next();
+                                                
+                 // TODO iterate through message batch
+                    ObjectNode obj = (ObjectNode) record.value();
+                                       
+                                        
+                    // TODO pull out statistics from message
+                    meanMeanHigh += obj.get("meanHigh").asDouble();
+                    meanMeanLow += obj.get("meanLow").asDouble();
+                 	meanMeanOpen += obj.get("meanOpen").asDouble();
+                  	meanMeanClose += obj.get("meanClose").asDouble();
+                    meanMeanVolume += obj.get("meanVolume").asDouble();
+                    
+                    // TODO calculate batch statistics meanHigh, meanLow, meanOpen, meanClose, meanVolume
+                    
+                    // TODO calculate currentAggregatedStatistic and compare to previousAggregatedStatistic
+                    
+                    // TODO determine if delta percentage is greater than threshold 
+                    
+                    // TODO print output to screen
+                   // set previos to next
+                    
+             } 
+            System.out.println(meanMeanClose);
+            System.out.println(meanMeanOpen);
+            
+            System.out.println(meanMeanLow);
+            System.out.println(meanMeanHigh);
+            System.out.println(meanMeanVolume);
+            
+        }
+
         
     }
 

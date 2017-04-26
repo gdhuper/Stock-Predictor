@@ -92,6 +92,7 @@ public final class StockSparkApp {
                         LocationStrategies.PreferConsistent(),
                         ConsumerStrategies.<String, JsonNode>SubscribePattern(topicPattern, kafkaParams)
                       );
+     //   messages.print();
     
         // pull values out of ConsumerRecords 
         JavaPairDStream<String, JsonNode> keyValuePairs = messages.mapToPair(new PairFunction<ConsumerRecord<String, JsonNode>, String, JsonNode>() {
@@ -99,12 +100,12 @@ public final class StockSparkApp {
             @Override
             public Tuple2<String, JsonNode> call(ConsumerRecord<String, JsonNode> record) throws Exception {
                 // TODO replace 'null' with key-value pair as tuple2
-            	System.out.println(record.key() + " : " + record.value());
-                return new Tuple2(record.key(), record.value());
+            	//System.out.println(record.key() + " : " + record.value());
+                return new Tuple2<String, JsonNode>(record.key(), record.value());
                 
             }
         }); 
-        keyValuePairs.print(); //debugging
+     //   keyValuePairs.print(); //debugging
         
 
         
@@ -121,27 +122,25 @@ public final class StockSparkApp {
                         long sumVolume=0;
                         String stockSymbol = null, lastTimestamp = null;
                         Tuple2<String, JsonNode> tuple;
+                        int count = 0;
                         while(recordIterator.hasNext()) {
                             // TODO get next record
                         	tuple = recordIterator.next();
-                        	String key = tuple._1;
-                        	JsonNode val = tuple._2;
-                        	
-                        	System.out.println(key);
-                        	
-                        	
+                        	stockSymbol = tuple._1();
+                        	lastTimestamp = tuple._2().get("timestamp").asText();
+                        	sumHigh += tuple._2().get("high").asDouble();
+                        	sumLow += tuple._2().get("low").asDouble();
+                        	sumOpen += tuple._2().get("open").asDouble();
+                        	sumClose += tuple._2().get("close").asDouble();
+                        	lastClose = tuple._2().get("close").asDouble();
+                        	sumVolume += tuple._2().get("volume").asDouble();
+                        	count++;
      
-                            // TODO pull out timestamp, stockSymbol from record
-                            
-                            // TODO pull out metrics from record
-                            
-                            // TODO calculate sums (sumHigh += ... , sumLow += ..., etc)
-                            
 
                         }
                         
                         // TODO calculate meanHigh, meanLow, ...
-                        double meanHigh = 0, meanLow = 0, meanOpen = 0, meanClose = 0, meanVolume = 0;
+                        double meanHigh = sumHigh/count, meanLow = sumLow/count, meanOpen = sumOpen/count, meanClose = sumClose/count, meanVolume = sumVolume/count;
                         
                         // configure Kafka producer props
                         Properties producerProps = new Properties();
@@ -153,16 +152,14 @@ public final class StockSparkApp {
                         ObjectNode value = JsonNodeFactory.instance.objectNode();
                         
                         // TODO put key-value pairs in ObjectNode
-                        value.put("lastTimestamp", 1);
-                        value.put("meanHigh", 1);
-                        value.put("meanLow", 1);
-                        value.put("meanOpen", 1);
-                        value.put("meanClose", 1);
-                        value.put("meanVolume", 1);
-                        value.put("lastClose", 1);
-
-
-                        
+                        value.put("stockSymbol", stockSymbol);
+                        value.put("lastTimestamp", lastTimestamp);
+                        value.put("meanHigh", meanHigh);
+                        value.put("meanLow", meanLow);
+                        value.put("meanOpen", meanOpen);
+                        value.put("meanClose", meanClose);
+                        value.put("meanVolume", meanVolume);
+                        value.put("lastClose", lastClose);
 
                         // TODO create a properly-parameterized ProducerRecord
                         ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(outTopic, value);

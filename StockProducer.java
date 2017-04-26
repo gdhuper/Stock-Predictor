@@ -70,19 +70,13 @@ public class StockProducer {
                 // TODO parse out the fields from the line and create key-value pairs in ObjectNode
                 // TODO filter out "bad" records
         		String[] arr = temp1.split(",");
-        		String timestamp = arr[0];
-        		String open = arr[1];
-        		String high = arr[2];
-        		String low = arr[3];
-        		String close = arr[4];
-        		String volume = arr[5];
         		
-        		obj.put("timestamp", timestamp);
-        		obj.put("open", timestamp);
-        		obj.put("high", timestamp);
-        		obj.put("low", timestamp);
-        		obj.put("close", timestamp);
-        		obj.put("volume", timestamp);
+        		obj.put("timestamp", arr[0]);
+        		obj.put("open", arr[1]);
+        		obj.put("high", arr[2]);
+        		obj.put("low", arr[3]);
+        		obj.put("close", arr[4]);
+        		obj.put("volume", arr[5]);
         		//System.out.println(timestamp + ": " + volume);//debugging 
         		
                ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, obj);
@@ -93,8 +87,7 @@ public class StockProducer {
                catch (Exception e)
                {
             	   System.out.println(e.getMessage());
-               }
-               
+               }       
                // TODO sleep the thread
                Thread.sleep(sleepTime);
         		
