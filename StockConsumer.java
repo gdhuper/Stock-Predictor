@@ -45,47 +45,77 @@ public class StockConsumer {
         // TODO loop infinitely -- pulling messages out every pollTimeOut ms
        
         double meanMeanHigh = 0, meanMeanLow = 0, meanMeanOpen = 0, meanMeanClose = 0, meanMeanVolume= 0;
-         int count =0;
+        double sumMeanHigh = 0, sumMeanLow = 0, sumMeanOpen = 0, sumMeanClose = 0, sumMeanVolume= 0;
+        double currentAggregatedStatistic =0, previousAggregatedStatistic =0;
+        
         while(true) {
+        	
             // Request unread messages from the topic.
             ConsumerRecords<String, JsonNode> consumerRecords = consumer.poll(pollTimeOut);
             
             Iterator<ConsumerRecord<String, JsonNode>> iterator = consumerRecords.iterator();
+            String timeStamp = "";
+            double lastClose = 0;
+            double count =0;
             while (iterator.hasNext()) {
             	// TODO create a ConsumerRecord from message
                     ConsumerRecord<String, JsonNode> record = iterator.next();
                                                 
                  // TODO iterate through message batch
                     ObjectNode obj = (ObjectNode) record.value();
-                                       
-                                        
+                                                                             
                     // TODO pull out statistics from message
-                    meanMeanHigh += obj.get("meanHigh").asDouble();
-                    meanMeanLow += obj.get("meanLow").asDouble();
-                 	meanMeanOpen += obj.get("meanOpen").asDouble();
-                  	meanMeanClose += obj.get("meanClose").asDouble();
-                    meanMeanVolume += obj.get("meanVolume").asDouble();
-                    
+                    sumMeanHigh += obj.get("meanHigh").asDouble();
+                    sumMeanLow += obj.get("meanLow").asDouble();
+                 	sumMeanOpen += obj.get("meanOpen").asDouble();
+                  	sumMeanClose += obj.get("meanClose").asDouble();
+                    sumMeanVolume += obj.get("meanVolume").asDouble();  
+                    timeStamp = obj.get("lastTimestamp").asText();
+                    lastClose = obj.get("lastClose").asDouble();
                     count++;
-                    
-             } 
-         // TODO calculate batch statistics meanHigh, meanLow, meanOpen, meanClose, meanVolume
+                
+            }  
+            // TODO calculate batch statistics meanHigh, meanLow, meanOpen, meanClose, meanVolume
+            meanMeanHigh = sumMeanHigh / count;
+            meanMeanLow = sumMeanLow / count;
+            meanMeanOpen = sumMeanHigh / count;
+            meanMeanClose = sumMeanLow / count;
+            meanMeanVolume = sumMeanHigh / count;
+            
+            currentAggregatedStatistic =  meanMeanVolume * ((meanMeanHigh + meanMeanLow + meanMeanOpen + meanMeanClose) / 4.0);
+            
             
             // TODO calculate currentAggregatedStatistic and compare to previousAggregatedStatistic
             
             // TODO determine if delta percentage is greater than threshold 
+            if(previousAggregatedStatistic != 0)
+            {
+            double delta = (currentAggregatedStatistic - previousAggregatedStatistic) / ( 100 * meanMeanVolume);
+    
+            if(delta > thresholdPercentage)
+            {
+            	System.out.println(timeStamp + "," +stockSymbol + "," + lastClose + "," + delta+ "," + "sell");
+            }
+            if(delta >= 0 && delta <= thresholdPercentage)
+            {
+            	System.out.println(timeStamp + "," +stockSymbol + "," + lastClose + "," + delta+ "," + "hold");
+            }
+            if(delta < 0 && delta < thresholdPercentage)
+            {
+            	System.out.println(timeStamp + "," +stockSymbol + "," + lastClose + "," + delta+ "," + "buy");
+            }
+            }
+            else
+            {
+            	//do nothing if previousAggregatedStatistic == 0
+            }
             
+            previousAggregatedStatistic = currentAggregatedStatistic;
             // TODO print output to screen
-           //  set previos to next
+            
+            //  set previos to next
             
         }
-        System.out.println(meanMeanClose/count);
-        System.out.println(meanMeanOpen/count);
-        
-        System.out.println(meanMeanLow/count);
-        System.out.println(meanMeanHigh/count);
-        System.out.println(meanMeanVolume/count);
-        
 
         
     }
