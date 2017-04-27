@@ -60,17 +60,18 @@ public class StockProducer {
         	temp3 = br.readLine();
         	if(temp3 == null)
         	{
-        		break;
+        		break; //skips last two records
         	}
         	else
         	{
                 // TODO create an ObjectNode to store data in
         		ObjectNode obj = JsonNodeFactory.instance.objectNode();
-        		
-                // TODO parse out the fields from the line and create key-value pairs in ObjectNode
-                // TODO filter out "bad" records
+ 
+        		// TODO parse out the fields from the line and create key-value pairs in ObjectNode               
         		String[] arr = temp1.split(",");
         		
+        		// TODO filter out "bad" records
+        		if(arr.length !=0 && arr[0] != null && arr[1] != null && arr[2] != null && arr[3] != null && arr[4] != null && arr[5]!= null){
         		obj.put("timestamp", arr[0]);
         		obj.put("open", arr[1]);
         		obj.put("high", arr[2]);
@@ -78,7 +79,6 @@ public class StockProducer {
         		obj.put("close", arr[4]);
         		obj.put("volume", arr[5]);
         		obj.put("stockSymbol", stockSymbol);
-        		//System.out.println(timestamp + ": " + volume);//debugging 
         		
                ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, obj);
                System.out.println(stockSymbol + " : " + obj.toString()); //debugging
@@ -91,6 +91,8 @@ public class StockProducer {
                }       
                // TODO sleep the thread
                Thread.sleep(sleepTime);
+        		}
+        	
         		
         	}
         }

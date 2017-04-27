@@ -44,9 +44,8 @@ public class StockConsumer {
         
         // TODO loop infinitely -- pulling messages out every pollTimeOut ms
        
-        double meanMeanHigh = 0, meanMeanLow = 0, meanMeanOpen = 0, meanMeanClose = 0, meanMeanVolume= 0;
-        double sumMeanHigh = 0, sumMeanLow = 0, sumMeanOpen = 0, sumMeanClose = 0, sumMeanVolume= 0;
         double currentAggregatedStatistic =0, previousAggregatedStatistic =0;
+
         
         while(true) {
         	
@@ -57,6 +56,9 @@ public class StockConsumer {
             String timeStamp = "";
             double lastClose = 0;
             double count =0;
+            double meanMeanHigh = 0, meanMeanLow = 0, meanMeanOpen = 0, meanMeanClose = 0, meanMeanVolume= 0;
+            double sumMeanHigh = 0, sumMeanLow = 0, sumMeanOpen = 0, sumMeanClose = 0, sumMeanVolume= 0;
+
             while (iterator.hasNext()) {
             	// TODO create a ConsumerRecord from message
                     ConsumerRecord<String, JsonNode> record = iterator.next();
@@ -75,6 +77,7 @@ public class StockConsumer {
                     count++;
                 
             }  
+            if(count > 0){
             // TODO calculate batch statistics meanHigh, meanLow, meanOpen, meanClose, meanVolume
             meanMeanHigh = sumMeanHigh / count;
             meanMeanLow = sumMeanLow / count;
@@ -82,16 +85,15 @@ public class StockConsumer {
             meanMeanClose = sumMeanLow / count;
             meanMeanVolume = sumMeanHigh / count;
             
-            currentAggregatedStatistic =  meanMeanVolume * ((meanMeanHigh + meanMeanLow + meanMeanOpen + meanMeanClose) / 4.0);
-            
-            
             // TODO calculate currentAggregatedStatistic and compare to previousAggregatedStatistic
+            currentAggregatedStatistic =  meanMeanVolume * ((meanMeanHigh + meanMeanLow + meanMeanOpen + meanMeanClose) / 4.0);
+
             
             // TODO determine if delta percentage is greater than threshold 
             if(previousAggregatedStatistic != 0)
             {
             double delta = (currentAggregatedStatistic - previousAggregatedStatistic) / ( 100 * meanMeanVolume);
-    
+            
             if(delta > thresholdPercentage)
             {
             	System.out.println(timeStamp + "," +stockSymbol + "," + lastClose + "," + delta+ "," + "sell");
@@ -109,11 +111,10 @@ public class StockConsumer {
             {
             	//do nothing if previousAggregatedStatistic == 0
             }
-            
+            //  set previousAggregatedStatistic to currentAggregatedStatistic
             previousAggregatedStatistic = currentAggregatedStatistic;
-            // TODO print output to screen
             
-            //  set previos to next
+            }
             
         }
 

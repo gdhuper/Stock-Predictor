@@ -107,7 +107,6 @@ public final class StockSparkApp {
         }); 
      //   keyValuePairs.print(); //debugging
         
-
         
         keyValuePairs.foreachRDD(new VoidFunction<JavaPairRDD<String,JsonNode>>() {
             private static final long serialVersionUID = 1L;
