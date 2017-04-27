@@ -45,7 +45,7 @@ public class StockConsumer {
         // TODO loop infinitely -- pulling messages out every pollTimeOut ms
        
         double meanMeanHigh = 0, meanMeanLow = 0, meanMeanOpen = 0, meanMeanClose = 0, meanMeanVolume= 0;
-         
+         int count =0;
         while(true) {
             // Request unread messages from the topic.
             ConsumerRecords<String, JsonNode> consumerRecords = consumer.poll(pollTimeOut);
@@ -66,24 +66,26 @@ public class StockConsumer {
                   	meanMeanClose += obj.get("meanClose").asDouble();
                     meanMeanVolume += obj.get("meanVolume").asDouble();
                     
-                    // TODO calculate batch statistics meanHigh, meanLow, meanOpen, meanClose, meanVolume
-                    
-                    // TODO calculate currentAggregatedStatistic and compare to previousAggregatedStatistic
-                    
-                    // TODO determine if delta percentage is greater than threshold 
-                    
-                    // TODO print output to screen
-                   // set previos to next
+                    count++;
                     
              } 
-            System.out.println(meanMeanClose/consumerRecords.count());
-            System.out.println(meanMeanOpen/consumerRecords.count());
+         // TODO calculate batch statistics meanHigh, meanLow, meanOpen, meanClose, meanVolume
             
-            System.out.println(meanMeanLow/consumerRecords.count());
-            System.out.println(meanMeanHigh/consumerRecords.count());
-            System.out.println(meanMeanVolume/consumerRecords.count());
+            // TODO calculate currentAggregatedStatistic and compare to previousAggregatedStatistic
+            
+            // TODO determine if delta percentage is greater than threshold 
+            
+            // TODO print output to screen
+           //  set previos to next
             
         }
+        System.out.println(meanMeanClose/count);
+        System.out.println(meanMeanOpen/count);
+        
+        System.out.println(meanMeanLow/count);
+        System.out.println(meanMeanHigh/count);
+        System.out.println(meanMeanVolume/count);
+        
 
         
     }
