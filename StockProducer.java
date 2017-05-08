@@ -46,17 +46,17 @@ public class StockProducer {
         // TODO create a buffered file reader for the input file
  
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
-        String temp1 = null;
-        String temp2 = br.readLine();
-        String temp3 = br.readLine();
+      //  String temp1 = null;
+       // String temp2 = br.readLine();
+      //  String temp3 = br.readLine();
 
        
         
-     // TODO loop through all lines in input file
+         // TODO loop through all lines in input file
         while(true)
         {
-        	temp1 = temp2;
-        	temp2 = temp3;
+        	//temp1 = temp2;
+        	//temp2 = temp3;
         	temp3 = br.readLine();
         	if(temp3 == null)
         	{
@@ -68,7 +68,7 @@ public class StockProducer {
         		ObjectNode obj = JsonNodeFactory.instance.objectNode();
  
         		// TODO parse out the fields from the line and create key-value pairs in ObjectNode               
-        		String[] arr = temp1.split(",");
+        		String[] arr = temp3.split(",");
         		
         		// TODO filter out "bad" records
         		if(arr.length !=0 && arr[0] != null && arr[1] != null && arr[2] != null && arr[3] != null && arr[4] != null && arr[5]!= null){
@@ -80,14 +80,14 @@ public class StockProducer {
         		obj.put("volume", arr[5]);
         		obj.put("stockSymbol", stockSymbol);
         		
-               ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, obj);
+               ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, stockSymbol, obj); //stock symbol
                System.out.println(stockSymbol + " : " + obj.toString()); //debugging
                try{
                producer.send(rec);
                }
                catch (Exception e)
                {
-            	   System.out.println(e.getMessage());
+            	   System.out.println("Record could not be sent!");
                }       
                // TODO sleep the thread
                Thread.sleep(sleepTime);

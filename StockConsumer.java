@@ -31,7 +31,7 @@ public class StockConsumer {
         String groupId = args[3];
         double thresholdPercentage = Double.parseDouble(args[4]);
         
-        long pollTimeOut = 1000;
+        long pollTimeOut = 10000;
 
         
         // configure consumer

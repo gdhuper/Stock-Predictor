@@ -59,7 +59,7 @@ public final class StockSparkApp {
     public static void main(String[] args) {
         if (args.length < 6) {
             System.err.println("Usage: StockSparkApp <broker> <master> <in-topic> <out-topic> <cg> <interval>");
-            System.err.println("eg: StockSparkApp localhost:9092 localhost:2181 test out mycg 5000");
+            System.err.println("eg: StockSparkApp localhost:9092 local[2] test out mycg 5000");
             System.exit(1);
         }
 
