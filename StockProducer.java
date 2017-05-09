@@ -1,3 +1,8 @@
+/*
+*Gurpreet Singh CS185 Lab2
+*/
+
+
 package Lab2;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -74,9 +79,9 @@ public class StockProducer {
         		obj.put("low", arr[3]);
         		obj.put("close", arr[4]);
         		obj.put("volume", arr[5]);
-        		obj.put("stockSymbol", stockSymbol); //double check if this is required
+        		//obj.put("stockSymbol", stockSymbol); //double check if this is required
                ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, stockSymbol, obj); //stock symbol
-               System.out.println(stockSymbol + " : " + obj.toString()); //debugging
+              // System.out.println(stockSymbol + " : " + obj.toString()); //debugging
                try{
                producer.send(rec);
                }
@@ -93,8 +98,7 @@ public class StockProducer {
         			System.out.println("Discarding bad Record!");
         			continue;
         		}
-        	
-        		
+        	    		
         	}
         }
         
@@ -108,6 +112,9 @@ public class StockProducer {
         
     }
     
+    /*
+     * Helper method to check if string is numeric or not 
+     */
     public static boolean isNumber(String s)
     {
     	char[] ca = s.toCharArray();

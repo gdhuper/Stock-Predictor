@@ -1,3 +1,8 @@
+/*
+*Gurpreet Singh CS185 Lab2
+*/
+
+
 package Lab2;
 
 import org.apache.kafka.clients.consumer.*;
@@ -31,7 +36,7 @@ public class StockConsumer {
         String groupId = args[3];
         double thresholdPercentage = Double.parseDouble(args[4]);
         
-        long pollTimeOut = 10000;
+        long pollTimeOut = 1000;
 
         
         // configure consumer
@@ -65,6 +70,7 @@ public class StockConsumer {
                                                 
                  // TODO iterate through message batch
                     ObjectNode obj = (ObjectNode) record.value();
+                    String key = record.key();
                                                                              
                     // TODO pull out statistics from message
                     sumMeanHigh += obj.get("meanHigh").asDouble();

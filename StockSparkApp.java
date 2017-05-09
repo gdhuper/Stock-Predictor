@@ -1,3 +1,7 @@
+/*
+*Gurpreet Singh CS185 Lab2
+*/
+
 package Lab2;
 
 
@@ -125,7 +129,7 @@ public final class StockSparkApp {
                         while(recordIterator.hasNext()) {
                             // TODO get next record
                         	tuple = recordIterator.next();
-                        	stockSymbol = tuple._2().get("stockSymbol").asText();
+                        	stockSymbol = tuple._1();
                         	lastTimestamp = tuple._2().get("timestamp").asText();
                         	sumHigh += tuple._2().get("high").asDouble();
                         	sumLow += tuple._2().get("low").asDouble();
@@ -149,7 +153,7 @@ public final class StockSparkApp {
                         ObjectNode value = JsonNodeFactory.instance.objectNode();
                         
                         // TODO put key-value pairs in ObjectNode
-                        value.put("stockSymbol", stockSymbol);
+                       // value.put("stockSymbol", stockSymbol);
                         value.put("lastTimestamp", lastTimestamp);
                         value.put("meanHigh", meanHigh);
                         value.put("meanLow", meanLow);
@@ -159,7 +163,7 @@ public final class StockSparkApp {
                         value.put("lastClose", lastClose);
 
                         // TODO create a properly-parameterized ProducerRecord
-                        ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(outTopic, value);                      
+                        ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(outTopic, stockSymbol, value);                      
                         // TODO instantiate the KafkaProducer
                        KafkaProducer<String, JsonNode> producer = new KafkaProducer<String, JsonNode>(producerProps);                     
                         // TODO send the producer record
