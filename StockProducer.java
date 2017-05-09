@@ -46,30 +46,26 @@ public class StockProducer {
         // TODO create a buffered file reader for the input file
  
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
-      //  String temp1 = null;
-       // String temp2 = br.readLine();
-      //  String temp3 = br.readLine();
-
-       
-        
+            
          // TODO loop through all lines in input file
         while(true)
         {
         	//temp1 = temp2;
         	//temp2 = temp3;
-        	temp3 = br.readLine();
-        	if(temp3 == null)
+        	String temp = br.readLine();
+        	if(temp == null)
         	{
         		break; //skips last two records
         	}
         	else
         	{
+        		
                 // TODO create an ObjectNode to store data in
         		ObjectNode obj = JsonNodeFactory.instance.objectNode();
  
         		// TODO parse out the fields from the line and create key-value pairs in ObjectNode               
-        		String[] arr = temp3.split(",");
-        		
+        		String[] arr = temp.split(",");
+        		if(isNumber(arr[0]) == true && isNumber(arr[1]) == true && isNumber(arr[2]) == true && isNumber(arr[3]) == true && isNumber(arr[4]) == true && isNumber(arr[5]) == true){
         		// TODO filter out "bad" records
         		if(arr.length !=0 && arr[0] != null && arr[1] != null && arr[2] != null && arr[3] != null && arr[4] != null && arr[5]!= null){
         		obj.put("timestamp", arr[0]);
@@ -78,8 +74,7 @@ public class StockProducer {
         		obj.put("low", arr[3]);
         		obj.put("close", arr[4]);
         		obj.put("volume", arr[5]);
-        		obj.put("stockSymbol", stockSymbol);
-        		
+        		obj.put("stockSymbol", stockSymbol); //double check if this is required
                ProducerRecord<String, JsonNode> rec = new ProducerRecord<String, JsonNode>(topic, stockSymbol, obj); //stock symbol
                System.out.println(stockSymbol + " : " + obj.toString()); //debugging
                try{
@@ -91,6 +86,12 @@ public class StockProducer {
                }       
                // TODO sleep the thread
                Thread.sleep(sleepTime);
+        		}
+        	}
+        		else
+        		{
+        			System.out.println("Discarding bad Record!");
+        			continue;
         		}
         	
         		
@@ -105,6 +106,22 @@ public class StockProducer {
         
               
         
+    }
+    
+    public static boolean isNumber(String s)
+    {
+    	char[] ca = s.toCharArray();
+    	for(char c: ca)
+    	{
+    		if(Character.isAlphabetic(c))
+    		{
+    			return false;
+    		}
+    		else{
+    			continue;
+    		}
+    	}
+    	return true;
     }
 
     public static void configureProducer(String brokerSocket) {
