@@ -2,7 +2,6 @@
 *Gurpreet Singh CS185 Lab2
 */
 
-
 package Lab2;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -107,8 +106,7 @@ public class StockProducer {
         
         // TODO close producer
         producer.close();
-        
-              
+                   
         
     }
     
