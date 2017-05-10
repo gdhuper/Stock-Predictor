@@ -2,7 +2,6 @@
 *Gurpreet Singh CS185 Lab2
 */
 
-
 package Lab2;
 
 import org.apache.kafka.clients.consumer.*;
@@ -50,7 +49,6 @@ public class StockConsumer {
         // TODO loop infinitely -- pulling messages out every pollTimeOut ms
        
         double currentAggregatedStatistic =0, previousAggregatedStatistic =0;
-
         
         while(true) {
         	
@@ -123,7 +121,6 @@ public class StockConsumer {
             }
             
         }
-
         
     }
 
