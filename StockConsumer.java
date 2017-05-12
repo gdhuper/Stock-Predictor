@@ -6,7 +6,6 @@ package Lab2;
 
 import org.apache.kafka.clients.consumer.*;
 
-
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -123,7 +122,6 @@ public class StockConsumer {
         }
         
     }
-
     public static void configureConsumer(String brokerSocket, String groupId) {
         Properties props = new Properties();
         props.put("value.deserializer", "org.apache.kafka.connect.json.JsonDeserializer");
@@ -131,7 +129,6 @@ public class StockConsumer {
         props.put("bootstrap.servers", brokerSocket);
         props.put("group.id", groupId);
         props.put("auto.commit.enable", true);
-
         consumer = new KafkaConsumer<String, JsonNode>(props);
     }
 }
