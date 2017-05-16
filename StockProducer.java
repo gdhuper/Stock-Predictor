@@ -18,12 +18,10 @@ import java.util.concurrent.TimeoutException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-        
+      
 public class StockProducer {
     // Set the stream and topic to publish to.
-    public static String topic;
-    
-        
+    public static String topic;       
     // Declare a new producer
     public static KafkaProducer<String, JsonNode> producer;
         
